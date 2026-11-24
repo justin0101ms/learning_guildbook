@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家長運用 AI 協助孩子學習指南</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            scroll-behavior: smooth;
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.1); }
+            50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.3); }
+        }
+        .glow-effect { animation: pulse-glow 3s infinite; }
+
+        .gradient-text {
+            background: linear-gradient(to right, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Toast Animation */
+        @keyframes slideIn {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(100px); opacity: 0; }
+        }
+        .toast-enter { animation: slideIn 0.3s ease-out forwards; }
+        .toast-exit { animation: slideOut 0.3s ease-in forwards; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] hidden">
+        <div class="bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 border border-slate-700">
+            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span class="font-medium">連結已複製到剪貼簿！</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">AI</div>
+                    <span class="font-bold text-xl tracking-tight text-slate-800">PLHKS STEAMLAB</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#intro" class="text-slate-600 hover:text-blue-600 font-medium transition">導言</a>
+                    <a href="#methods" class="text-slate-600 hover:text-blue-600 font-medium transition">應用方法</a>
+                    <a href="#boundaries" class="text-slate-600 hover:text-blue-600 font-medium transition">關鍵界線</a>
+                </div>
+                <!-- Copy Link Button in Nav -->
+                <button onclick="copyLink()" class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-700 transition shadow-lg hover:shadow-blue-500/30 flex items-center gap-2 cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                    </svg>
+                    複製影片連結
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="intro" class="relative pt-32 pb-20 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-blue-100 rounded-full blur-3xl opacity-50 mix-blend-multiply animate-float"></div>
+            <div class="absolute bottom-0 right-0 w-[800px] h-[800px] bg-purple-100 rounded-full blur-3xl opacity-50 mix-blend-multiply"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wide">
+                        <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+                        PLHKS STEAMLAB™ Copyright 2026
+                    </div>
+                    <h1 class="text-5xl md:text-6xl font-extrabold leading-tight text-slate-900">
+                        家長運用 <span class="gradient-text">AI</span><br>
+                        協助孩子學習指南
+                    </h1>
+                    <p class="text-xl text-slate-600 leading-relaxed max-w-lg">
+                        AI 不是用來取代思考，而是作為合作夥伴。將 AI 視為蘇格拉底式的導師，培養孩子的好奇心、批判性思維與數位素養。
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <!-- Copy Link Button in Hero -->
+                        <button onclick="copyLink()" class="px-8 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition shadow-xl flex items-center gap-2 cursor-pointer">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                            </svg>
+                            複製 YouTube 影片連結
+                        </button>
+                        <a href="#methods" class="px-8 py-3 bg-white text-slate-900 border border-slate-200 rounded-lg font-semibold hover:bg-slate-50 transition">了解應用場景</a>
+                    </div>
+                    <!-- Link preview box -->
+                    <div class="bg-white/60 backdrop-blur border border-slate-200 rounded-lg p-3 flex items-center gap-2 max-w-md">
+                        <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                        </svg>
+                        <code class="text-sm text-slate-600 truncate flex-1">https://youtu.be/x160WiSZhQA</code>
+                        <button onclick="copyLink()" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1 rounded font-medium transition cursor-pointer">複製</button>
+                    </div>
+                </div>
+                
+                <!-- Interactive Illustration Area -->
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl transform rotate-3 opacity-20 blur-lg"></div>
+                    <div class="relative bg-white rounded-2xl shadow-2xl p-6 border border-slate-100 glow-effect">
+                        <div class="flex items-center justify-between mb-4 border-b pb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-slate-800">AI 學習導師</h3>
+                                    <p class="text-xs text-green-600 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> 線上</p>
+                                </div>
+                            </div>
+                            <div class="text-xs text-slate-400">現在</div>
+                        </div>
+                        
+                        <div class="space-y-4 min-h-[200px]">
+                            <div class="flex justify-end">
+                                <div class="bg-blue-600 text-white px-4 py-2 rounded-2xl rounded-tr-none max-w-[80%] text-sm shadow-md">
+                                    請一步步解釋這道分數問題，但不要直接給答案，問我引導式問題。
+                                </div>
+                            </div>
+                            <div class="flex justify-start">
+                                <div class="bg-slate-100 text-slate-800 px-4 py-2 rounded-2xl rounded-tl-none max-w-[80%] text-sm shadow-sm">
+                                    沒問題！我們來看看這個披薩🍕。如果一個披薩切成 8 塊，你吃了 3 塊，還剩下幾分之幾呢？試著畫圖看看？
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-4 border-t border-slate-100 flex gap-2">
+                            <input type="text" placeholder="輸入訊息..." class="flex-1 bg-slate-50 border border-slate-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-blue-500 transition">
+                            <button class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-xl border border-slate-100 flex items-center gap-3 animate-float" style="animation-delay: 1s;">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-500">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 font-medium">禁止行為</p>
+                            <p class="text-sm font-bold text-slate-800">Copy & Paste 作業</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Video Section with Copy Button -->
+    <section class="py-16 bg-gradient-to-br from-slate-50 to-blue-50 border-y border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">🎬 影片教學：AI 是工具，不是大腦</h2>
+                <p class="text-slate-600 max-w-2xl mx-auto">點擊下方按鈕複製影片連結，然後貼到瀏覽器網址列即可觀看完整動畫教學。</p>
+            </div>
+            
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200">
+                <div class="relative aspect-video bg-slate-900 flex items-center justify-center overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-24 h-24 bg-white/90 rounded-full flex items-center justify-center shadow-2xl">
+                            <svg class="w-10 h-10 text-red-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm flex items-center gap-2">
+                        <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                        YouTube 影片
+                    </div>
+                </div>
+                <div class="p-8 text-center">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2">觀看完整教學影片</h3>
+                    <p class="text-slate-600 mb-6">了解如何正確引導孩子使用 AI，避免抄襲並培養批判性思維</p>
+                    
+                    <!-- Copy Link Box -->
+                    <div class="max-w-xl mx-auto">
+                        <div class="flex items-center gap-2 bg-slate-100 rounded-lg p-2 border border-slate-200">
+                            <input type="text" id="linkInput" value="https://youtu.be/x160WiSZhQA" readonly class="flex-1 bg-transparent text-slate-700 text-sm px-3 py-2 focus:outline-none font-mono">
+                            <button onclick="copyLink()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md font-medium transition flex items-center gap-2 cursor-pointer shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                                </svg>
+                                複製連結
+                            </button>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-3">💡 點擊「複製連結」後，到瀏覽器網址列按 Ctrl+V (或 ⌘+V) 貼上即可開啟影片</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Philosophy Banner -->
+    <section class="py-12 bg-slate-900 text-white relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <div class="absolute right-0 top-0 w-64 h-64 bg-blue-500 rounded-full blur-3xl"></div>
+            <div class="absolute left-0 bottom-0 w-64 h-64 bg-purple-500 rounded-full blur-3xl"></div>
+        </div>
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 tracking-tight">"Artificial intelligence is a tool,<br>not your mind."</h2>
+            <p class="text-slate-400 text-lg">人工智慧是工具，而非你的大腦。</p>
+        </div>
+    </section>
+
+    <!-- Application Methods Grid -->
+    <section id="methods" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">四大應用領域</h2>
+                <p class="text-slate-600 max-w-2xl mx-auto">不要直接要求 AI 給出答案，而是提示它扮演支持型的導師。以下是具體的實踐方法：</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group">
+                    <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">1. 作業與學習支援</h3>
+                    <ul class="space-y-3 text-slate-600">
+                        <li class="flex items-start gap-2"><span class="text-blue-500 mt-1">●</span><span><strong>蘇格拉底式導師：</strong>「請一步步解釋，但提出引導式問題，引領孩子找到答案。」</span></li>
+                        <li class="flex items-start gap-2"><span class="text-blue-500 mt-1">●</span><span><strong>簡化複雜概念：</strong>「請以積木為比喻，向 7歲的孩子解釋量子物理學。」</span></li>
+                        <li class="flex items-start gap-2"><span class="text-blue-500 mt-1">●</span><span><strong>生成客製化練習：</strong>針對弱項生成測驗或單字卡。</span></li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group">
+                    <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 mb-6 group-hover:scale-110 transition">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">2. 創意與專題式學習</h3>
+                    <ul class="space-y-3 text-slate-600">
+                        <li class="flex items-start gap-2"><span class="text-purple-500 mt-1">●</span><span><strong>共同創作故事：</strong>讓孩子選擇主角與情節，融入學校詞彙。</span></li>
+                        <li class="flex items-start gap-2"><span class="text-purple-500 mt-1">●</span><span><strong>腦力激盪專題：</strong>產生獨特構想、規劃研究計畫與簡報大綱。</span></li>
+                        <li class="flex items-start gap-2"><span class="text-purple-500 mt-1">●</span><span><strong>視覺化創意：</strong>將文字描述轉化為 AI 藝術圖像。</span></li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group">
+                    <div class="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center text-orange-600 mb-6 group-hover:scale-110 transition">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">3. 培養 AI 素養與批判性思維</h3>
+                    <ul class="space-y-3 text-slate-600">
+                        <li class="flex items-start gap-2"><span class="text-orange-500 mt-1">●</span><span><strong>玩「找出 AI 幻覺」遊戲：</strong>對照書籍核對 AI 答案，教導 AI 也會犯錯。</span></li>
+                        <li class="flex items-start gap-2"><span class="text-orange-500 mt-1">●</span><span><strong>比較產出：</strong>評估 AI 文章與人類作品的語氣、深度與偏見。</span></li>
+                        <li class="flex items-start gap-2"><span class="text-orange-500 mt-1">●</span><span><strong>探索提示工程：</strong>學習如何透過清晰的溝通獲得更好的結果。</span></li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group">
+                    <div class="w-14 h-14 bg-teal-100 rounded-xl flex items-center justify-center text-teal-600 mb-6 group-hover:scale-110 transition">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">4. 個人管理與技能培養</h3>
+                    <ul class="space-y-3 text-slate-600">
+                        <li class="flex items-start gap-2"><span class="text-teal-500 mt-1">●</span><span><strong>擬定學習時間表：</strong>將大型專題拆解為每日易於完成的小任務。</span></li>
+                        <li class="flex items-start gap-2"><span class="text-teal-500 mt-1">●</span><span><strong>培育分眾興趣：</strong>針對特定主題（如深海生物）設計自訂進度小課程。</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Boundaries Section -->
+    <section id="boundaries" class="py-20 bg-white relative">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-slate-900 rounded-3xl p-8 md:p-12 shadow-2xl overflow-hidden relative">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-red-500 rounded-full blur-[100px] opacity-20"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-3 mb-8">
+                        <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-red-500/50">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        </div>
+                        <h2 class="text-3xl font-bold text-white">需與孩子建立的關鍵界線</h2>
+                    </div>
+
+                    <div class="grid gap-6">
+                        <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-6 flex flex-col md:flex-row gap-6 items-start hover:bg-white/15 transition">
+                            <div class="shrink-0 w-16 h-16 bg-red-500/20 rounded-lg flex items-center justify-center text-red-400 border border-red-500/30">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">設定「禁止直接複製貼上」規則</h3>
+                                <p class="text-slate-300 leading-relaxed">盡早建立共識：AI 是用來腦力激盪、釐清觀念與提供回饋的，<span class="text-red-400 font-bold">絕不能直接複製貼上到作業中</span>。</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-6 flex flex-col md:flex-row gap-6 items-start hover:bg-white/15 transition">
+                            <div class="shrink-0 w-16 h-16 bg-yellow-500/20 rounded-lg flex items-center justify-center text-yellow-400 border border-yellow-500/30">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">保護個人資料</h3>
+                                <p class="text-slate-300 leading-relaxed">教導孩子切勿在 AI 提示語中分享<span class="text-yellow-400 font-bold">全名、學校名稱、照片、位置或密碼</span>。</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-6 flex flex-col md:flex-row gap-6 items-start hover:bg-white/15 transition">
+                            <div class="shrink-0 w-16 h-16 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400 border border-blue-500/30">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">強調人類判斷力</h3>
+                                <p class="text-slate-300 leading-relaxed">提醒孩子，AI 是以數據訓練出來的工具，但他們自己的<span class="text-blue-400 font-bold">創造力、批判性思維與同理心</span>才是真正重要的。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-50 border-t border-slate-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center text-white font-bold text-sm">AI</div>
+                <span class="font-bold text-slate-800">PLHKS STEAMLAB™</span>
+            </div>
+            <p class="text-slate-500 text-sm text-center md:text-right">
+                © 2026 PLHKS STEAMLAB. All rights reserved.<br>
+                本指南旨在促進負責任的 AI 教育應用。
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Copy Link Function
+        const YOUTUBE_LINK = 'https://youtu.be/x160WiSZhQA';
+
+        function copyLink() {
+            // Try modern clipboard API first
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(YOUTUBE_LINK).then(() => {
+                    showToast();
+                }).catch(() => {
+                    fallbackCopy();
+                });
+            } else {
+                fallbackCopy();
+            }
+        }
+
+        function fallbackCopy() {
+            // Fallback method for older browsers
+            const input = document.getElementById('linkInput');
+            if (input) {
+                input.select();
+                input.setSelectionRange(0, 99999);
+                try {
+                    document.execCommand('copy');
+                    showToast();
+                } catch (err) {
+                    alert('請手動複製連結：' + YOUTUBE_LINK);
+                }
+            }
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('hidden', 'toast-exit');
+            toast.classList.add('toast-enter');
+            
+            setTimeout(() => {
+                toast.classList.remove('toast-enter');
+                toast.classList.add('toast-exit');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 300);
+            }, 2000);
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-md');
+                nav.classList.replace('bg-white/80', 'bg-white/95');
+            } else {
+                nav.classList.remove('shadow-md');
+                nav.classList.replace('bg-white/95', 'bg-white/80');
+            }
+        });
+    </script>
+</body>
+</html>
